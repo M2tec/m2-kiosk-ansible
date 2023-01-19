@@ -1,0 +1,111 @@
+#
+# This file is part of the m2-kiosk-ansible distribution (https://github.com/M2tec/m2_kiosk_ansible).
+# Copyright (c) 2023 Maarten Menheere.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 3.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+
+- name: Install packages
+  hosts: m2paypad
+  become: yes
+  vars: 
+    dest_path: /tmp/latest/
+
+  tasks:
+  - name: Ping my hosts
+    ansible.builtin.ping:
+
+  - name: Rotate screen 180 degrees 
+    shell: "sudo grep -qFx 'lcd_rotate=2' /boot/config.txt ||  echo 'lcd_rotate=2' | sudo tee -a /boot/config.txt"
+
+  - name: Make sure destination dir exists
+    file:
+      path: "{{ dest_path | dirname }}"
+      state: directory
+
+  - name: Add locale bash variables for en_GB 
+    shell: 'echo "LANG=en_GB.UTF-8 LC_CTYPE=en_GB.UTF-8 LC_MESSAGES=en_GB.UTF-8 LC_ALL=en_GB.UTF-8" | tr " " "\n" | sudo tee /etc/default/locale'
+
+  - name: Enable US locale 
+    shell: "sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen"
+    
+  - name: Enable NL locale 
+    shell: "sed -i '/nl_NL.UTF-8/s/^# //g' /etc/locale.gen"    
+
+  - name: Generate locales 
+    shell: 'locale-gen' 
+
+  - name: Update apt-get repo and cache
+    apt: 
+      update_cache=yes 
+      force_apt_get=yes 
+      cache_valid_time=3600
+
+  - name: Upgrade all apt packages
+    apt: 
+      upgrade=dist 
+      force_apt_get=yes
+
+  - name: Install packages apt
+    apt:
+      pkg:
+        - python3-pip
+        - gunicorn
+        - nginx
+        - onboard
+        - gir1.2-soup-2.4
+        - at-spi2-core
+        - dconf-cli
+        - dconf-editor
+        - unattended-upgrades
+  
+  - name: Remove packages apt
+    apt:
+      state: absent
+      pkg:
+        - chromium-browser
+        - thonny
+        - geany
+        - rpd-plym-splash
+                        
+  - name: Install packages apt for gamechanger-dapp-cli
+    apt:
+      pkg:        
+        - curl 
+        - python3-qrcode
+        
+      state: latest
+      update_cache: true
+
+  - name: Install required pip packages
+    ansible.builtin.pip:
+      name: 
+        - escpos
+        - flask
+        - flask_cors
+        - Naked
+        
+  - name: Install nodesource repo
+    shell: "curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -"
+   
+  - name: Install nodejs
+    apt:
+      pkg:        
+        - nodejs
+
+  - name: Upgrade npm 
+    shell: "npm install --global npm@latest"
+
+
+
+
