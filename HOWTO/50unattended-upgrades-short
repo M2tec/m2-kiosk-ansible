@@ -1,0 +1,17 @@
+Unattended-Upgrade::Origins-Pattern {
+        "origin=Debian,codename=${distro_codename},label=Debian";
+        "origin=Debian,codename=${distro_codename},label=Debian-Security";
+        "origin=Debian,codename=${distro_codename}-security,label=Debian-Security";
+
+        "origin=M2tec,codename=${distro_codename},label=M2tec";
+};
+
+// Python regular expressions, matching packages to exclude from upgrading
+Unattended-Upgrade::Package-Blacklist {
+};
+
+Unattended-Upgrade::Mail "m.menheere@m2tec.nl";
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-Time "02:00";
+
+

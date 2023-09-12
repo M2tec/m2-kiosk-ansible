@@ -1,0 +1,39 @@
+- name: Install gamechanger-dapp-cli
+  hosts: m2paypad
+  become: yes
+  vars: 
+    dest_path: /tmp/latest/
+
+  tasks:
+  - name: Ping my hosts
+    ansible.builtin.ping:
+
+  - name: Install packages apt
+    apt:
+      pkg:
+        - python3-pip
+
+  - name: Install packages apt for gamechanger-dapp-cli
+    apt:
+      pkg:   
+        - build-essential 
+        - libcairo2-dev 
+        - libpango1.0-dev 
+        - libjpeg-dev 
+        - libgif-dev 
+        - librsvg2-dev
+        - apt-transport-https
+        - lsb-release
+        - gnupg
+  
+  - name: Install gamechanger cli
+    shell: "npm install --global gamechanger-dapp-cli"
+
+  - name: Fix gamechanger permissions
+    shell: "chmod +x /usr/bin/gamechanger-dapp-cli"
+
+  - name: Fix error gamechanger cli
+    shell: "sed -i 's/--no-warnings/ /'  /usr/lib/node_modules/gamechanger-dapp-cli/dist/cli.js"
+
+  - name: Fix path gamechanger cli
+    shell: "sed -i 's|path: path_1.default.resolve(process.cwd(), `./${_1.cli.flags.outputFile}`)|path: path_1.default.resolve(_1.cli.flags.outputFile)|' /usr/lib/node_modules/gamechanger-dapp-cli/dist/handlers/qr.js"

@@ -1,0 +1,42 @@
+- name: Install packages
+  hosts: m2paypad
+  become: yes
+  vars: 
+    dest_path: /tmp/latest/
+
+  tasks:
+  - name: Ping my hosts
+    ansible.builtin.ping:   
+
+  - name: Make sure destination dir exists
+    file:
+      path: "{{ dest_path | dirname }}"
+      state: directory
+
+  - name: Remove old debs
+    shell: "rm -f /tmp/latest/*.deb"
+    register: command_result
+
+  - name: display content of all .deb files in dir
+    debug: msg={{lookup('fileglob', '/home/maarten/m2paypad/package_debs/versions/latest/*.deb')}}
+
+  - name: Copy each file over that matches the given pattern
+    copy:
+      src: "{{ item }}"
+      dest: "{{ dest_path }}"
+      owner: "root"
+      mode: 0600
+    with_fileglob:
+      - "/home/maarten/m2paypad/package_debs/versions/latest/*.deb"
+
+  - name: Making a list of files
+    shell: "ls /tmp/latest/*.deb"
+    register: command_result
+
+  - name: Installing m2paypad debs sequentially.
+    shell: "dpkg -i {{item}}"
+    with_items: 
+     - "{{ command_result.stdout_lines }}"
+
+
+

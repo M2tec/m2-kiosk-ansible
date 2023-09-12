@@ -1,0 +1,7 @@
+server:
+  hosts:
+    m2paypad:
+      ansible_host: zero.home
+      ansible_user: m2paypad
+      ansible_become_pass: 'm2paypad'
+

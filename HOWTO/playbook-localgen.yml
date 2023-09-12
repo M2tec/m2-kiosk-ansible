@@ -1,0 +1,8 @@
+  - name: Update locale 
+    shell: 'sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen'
+
+  - name: Update gen
+    shell: 'locale-gen --purge "en_US.UTF-8"'
+
+  - name: Dpkg reconfigure locales 
+    shell: 'dpkg-reconfigure --frontend noninteractive locales'
