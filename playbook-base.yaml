@@ -25,8 +25,8 @@
   - name: Ping my hosts
     ansible.builtin.ping:
 
-  - name: Rotate screen 180 degrees 
-    shell: "sudo grep -qFx 'lcd_rotate=2' /boot/config.txt ||  echo 'lcd_rotate=2' | sudo tee -a /boot/config.txt"
+  - name: Enable hyperpixel overlay
+    shell: "sudo grep -qFx 'dtoverlay=vc4-kms-dpi-hyperpixel4' /boot/config.txt ||  echo 'dtoverlay=vc4-kms-dpi-hyperpixel4' | sudo tee -a /boot/config.txt"
 
   - name: Make sure destination dir exists
     file:
@@ -56,6 +56,23 @@
       upgrade=dist 
       force_apt_get=yes
 
+  - name: Install desktop
+    apt:
+      install_recommends: false
+      pkg:
+        - xserver-xorg
+        - xinit
+        - raspberrypi-ui-mods 
+        - lxsession
+        - gtk2-engines-clearlookspix
+        - lxde-core 
+        - lxappearance
+        - xfce4 
+        - xfce4-terminal
+        - pixflat-icons
+        - gtk2-engines-pixflat
+        - network-manager-gnome
+
   - name: Install packages apt
     apt:
       pkg:
@@ -68,43 +85,14 @@
         - dconf-cli
         - dconf-editor
         - unattended-upgrades
-  
-  - name: Remove packages apt
-    apt:
-      state: absent
-      pkg:
-        - chromium-browser
-        - thonny
-        - geany
-        - rpd-plym-splash
-                        
-  - name: Install packages apt for gamechanger-dapp-cli
-    apt:
-      pkg:        
-        - curl 
+        - python3-flask
+        - python3-flask-cors
         - python3-qrcode
-        
-      state: latest
-      update_cache: true
+  
+                        
 
-  - name: Install required pip packages
-    ansible.builtin.pip:
-      name: 
-        - escpos
-        - flask
-        - flask_cors
-        - Naked
-        
-  - name: Install nodesource repo
-    shell: "curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -"
-   
-  - name: Install nodejs
-    apt:
-      pkg:        
-        - nodejs
 
-  - name: Upgrade npm 
-    shell: "npm install --global npm@latest"
+        
 
 
 

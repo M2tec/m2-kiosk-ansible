@@ -1,5 +1,5 @@
 - name: Install packages
-  hosts: m2paypad
+  hosts: all
   become: yes
   vars: 
     dest_path: /tmp/latest/
