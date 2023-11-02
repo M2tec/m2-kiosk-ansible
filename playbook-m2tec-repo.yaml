@@ -30,7 +30,7 @@
     register: command_result
 
   - name: Installing m2tec apt repo
-    shell: 'echo "deb https://packages.m2tec.nl/apt/ bullseye stable" | sudo tee /etc/apt/sources.list.d/m2tec.list'
+    shell: 'echo "deb https://packages.m2tec.nl/apt/ bullseye-unstable unstable" | sudo tee /etc/apt/sources.list.d/m2tec.list'
     register: command_result
 
   - name: Update apt-get repo and cache
@@ -40,9 +40,9 @@
   - name: Install packages apt
     apt:
       pkg:
-        - m2-kiosk-app
+        - m2-kiosk-app-hyper
         - m2-kiosk-desktop
         - m2-kiosk-web
 
-  - name: Unconditionally reboot the machine with all defaults
+  - name: Reboot the machine
     ansible.builtin.reboot:

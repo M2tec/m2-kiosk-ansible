@@ -64,14 +64,14 @@
         - xinit
         - raspberrypi-ui-mods 
         - lxsession
-        - gtk2-engines-clearlookspix
+        - gnome-themes-extra
         - lxde-core 
         - lxappearance
         - xfce4 
         - xfce4-terminal
         - pixflat-icons
-        - gtk2-engines-pixflat
         - network-manager-gnome
+        - pipanel
 
   - name: Install packages apt
     apt:
@@ -86,14 +86,12 @@
         - dconf-editor
         - unattended-upgrades
         - python3-flask
-        - python3-flask-cors
-        - python3-qrcode
-  
-                        
+        - python3-flask-cors                      
 
-
+  - name: Install python qrcode library
+    shell: "pip install qrcode"
         
-
-
+  - name: Set boot to desktop
+    shell: "raspi-config nonint do_boot_behaviour B4"
 
 

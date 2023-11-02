@@ -1,0 +1,25 @@
+Install raspios 32bit bulseye lite. 
+
+Before installing the basepackages wait a little. The time is can not be set correctly yet. Causing errors for apt. 
+
+# Set boot to desktop via 
+sudo raspi-config
+1 System Options
+S5 Boot/ Auto login
+B4 Desktop Autologin
+
+6 Advanced Options
+AA Network config
+2 NetworkManager
+
+
+
+
+
+# Get unique serial number 
+cat /proc/cpuinfo | grep Serial | cut -d ' ' -f 2
+
+# Change the root and user password
+
+# Remove wifi password
+sudo nmcli connection delete id TMNL-815B31
